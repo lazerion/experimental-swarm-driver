@@ -1,0 +1,32 @@
+version: '3'
+services:
+  # hazelcast imdg
+  hazelcast:
+    image: barisaydinoz/swarm-driver:1.0-SNAPSHOT
+    ports:
+      - "5701:5701"
+    deploy:
+    # increase replica size
+      replicas: 1
+    networks:
+      - backend
+    # volumes:
+    #     - .:/configFolder
+    # environment:
+    #     - JAVA_OPTS=-Dhazelcast.config=/configFolder/hazelcast.xml
+
+  # visualizer
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8081:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+# networks
+networks:
+  backend:

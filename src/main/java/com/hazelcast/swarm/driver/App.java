@@ -5,12 +5,15 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.hazelcast.config.Config;
+import com.hazelcast.config.DiscoveryStrategyConfig;
 import com.hazelcast.config.XmlConfigBuilder;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.logging.ILogger;
 import com.hazelcast.logging.Slf4jFactory;
 import com.hazelcast.spi.discovery.AddressLocator;
+import com.hazelcast.spi.properties.GroupProperty;
+import com.hazelcast.swarm.SwarmDiscoveryStrategyFactory;
 import com.hazelcast.swarm.SwarmNetworkInspector;
 
 import java.io.FileNotFoundException;
@@ -29,10 +32,17 @@ public class App
     void run()  throws FileNotFoundException, InterruptedException{
 
         ClassLoader classLoader = App.class.getClassLoader();
-        InputStream stream = classLoader.getResourceAsStream("hazelcast.xml");
+        InputStream stream = classLoader.getResourceAsStream("/target/hazelcast.xml");
 
         Config config = new XmlConfigBuilder(stream).build();
         config.getNetworkConfig().getJoin().getDiscoveryConfig().setAddressLocator(createAddressLocator(new Slf4jFactory().getLogger("app")));
+
+
+        config.getNetworkConfig().getJoin().getAwsConfig().setEnabled(false);
+        DiscoveryStrategyConfig discoveryStrategyConfig = new DiscoveryStrategyConfig(new SwarmDiscoveryStrategyFactory());
+        config.getNetworkConfig().getJoin().getDiscoveryConfig().addDiscoveryStrategyConfig(discoveryStrategyConfig);
+
+        config.setProperty(GroupProperty.DISCOVERY_SPI_ENABLED.getName(), "true");
 
         instance = Hazelcast.newHazelcastInstance(config);
 

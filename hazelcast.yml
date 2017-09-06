@@ -2,7 +2,7 @@ version: '3'
 services:
   # hazelcast imdg
   hazelcast:
-    image: barisaydinoz/swarm-driver:1.0-SNAPSHOT
+    image: barisaydinoz/swarm-driver:1.11
     ports:
       - "5701:5701"
     deploy:
@@ -10,10 +10,13 @@ services:
       replicas: 1
     networks:
       - backend
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/Users/baris/work/hazelcast-swarm/experimental-driver/experimental-swarm-driver/target/docker/barisaydinoz/swarm-driver/1.3/build/maven:/target"
     # volumes:
     #     - .:/configFolder
-    # environment:
-    #     - JAVA_OPTS=-Dhazelcast.config=/configFolder/hazelcast.xml
+    environment:
+      - JAVA_OPTS=-Dhazelcast.config=/target/hazelcast.xml
 
   # visualizer
   visualizer:

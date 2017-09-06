@@ -16,7 +16,7 @@
             <discovery-strategies>
                 <discovery-strategy class="com.hazelcast.swarm.SwarmDiscoveryStrategy" enabled="true">
                     <properties>
-                        <property name="service-name">hz</property>
+                        <!--<property name="namespace">hazelcast</property>-->
                     </properties>
                 </discovery-strategy>
             </discovery-strategies>

@@ -1,22 +1,36 @@
 version: '3'
 services:
+# client app far jar image (client code and dependencies)
+  eureka-server:
+    image: netflixoss/eureka:1.3.1
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
   # hazelcast imdg
   hazelcast:
     image: barisaydinoz/swarm-driver:1.11
     ports:
       - "5701:5701"
+#    depends_on:
+#      - eureka-server
     deploy:
     # increase replica size
-      replicas: 1
+      replicas: 2
     networks:
       - backend
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/Users/baris/work/hazelcast-swarm/experimental-driver/experimental-swarm-driver/target/docker/barisaydinoz/swarm-driver/1.3/build/maven:/target"
+#      - "/Users/baris/.docker/machine/machines/master:/certs"
     # volumes:
     #     - .:/configFolder
     environment:
       - JAVA_OPTS=-Dhazelcast.config=/target/hazelcast.xml
+#      - DOCKER_HOST=tcp://192.168.99.100:2377
+#      - DOCKER_TLS_VERIFY=1
+#      - DOCKER_CERT_PATH=/certs
 
   # visualizer
   visualizer:

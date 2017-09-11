@@ -18,12 +18,23 @@
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-root</artifactId>
-            <version>3.9-SNAPSHOT</version>
+            <version>3.9.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast-docker-swarm</artifactId>
-            <version>1.6</version>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-eureka-one</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.hazelcast</groupId>
+                    <artifactId>hazelcast</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
